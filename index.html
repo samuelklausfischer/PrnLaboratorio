@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PRN PulseOps | Plataforma Operacional</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <h1>PRN PulseOps</h1>
+        <p>Central Operacional</p>
+        <nav>
+          <a href="#dashboard" class="active">Dashboard</a>
+          <a href="#modulos">Módulos</a>
+          <a href="#rotina">Rotina</a>
+          <a href="#modelo">Modelo de Tarefa</a>
+          <a href="#roadmap">Roadmap</a>
+          <a href="#ia">Evolução com IA</a>
+        </nav>
+      </aside>
+
+      <main>
+        <header class="topbar" id="dashboard">
+          <div>
+            <h2>Painel de Execução Diária</h2>
+            <p>
+              Visão consolidada de prioridades, progresso e gargalos para execução
+              com clareza.
+            </p>
+          </div>
+          <div class="actions">
+            <button id="newTaskBtn">Nova Tarefa</button>
+            <button id="focusModeBtn" class="ghost">Modo Foco</button>
+          </div>
+        </header>
+
+        <section class="kpi-grid">
+          <article class="kpi-card">
+            <span>Tarefas do dia</span>
+            <strong id="kpiTasks">8</strong>
+          </article>
+          <article class="kpi-card">
+            <span>Críticas</span>
+            <strong id="kpiCritical">2</strong>
+          </article>
+          <article class="kpi-card">
+            <span>Concluídas na semana</span>
+            <strong id="kpiDone">24</strong>
+          </article>
+          <article class="kpi-card">
+            <span>Bloqueios ativos</span>
+            <strong id="kpiBlocked">3</strong>
+          </article>
+        </section>
+
+        <section class="panel-grid" id="modulos">
+          <article class="card">
+            <div class="card-head">
+              <h3>Prioridades da Semana</h3>
+              <span class="tag important">Importante</span>
+            </div>
+            <ul>
+              <li>Padronizar fluxo de demandas internas</li>
+              <li>Fechar playbook de fechamento diário</li>
+              <li>Reduzir gargalos de aprovação em 30%</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <h3>Próximos Passos</h3>
+              <span class="tag planned">Planejado</span>
+            </div>
+            <ol>
+              <li>Revisar bloqueios com setor administrativo</li>
+              <li>Atualizar checklist de processo SOP-014</li>
+              <li>Registrar aprendizados no hub de documentação</li>
+            </ol>
+          </article>
+
+          <article class="card full-width">
+            <div class="card-head">
+              <h3>Quadro Operacional por Status</h3>
+              <div class="filters">
+                <button class="pill active" data-filter="all">Todos</button>
+                <button class="pill" data-filter="urgent">Urgente</button>
+                <button class="pill" data-filter="important">Importante</button>
+                <button class="pill" data-filter="blocked">Bloqueado</button>
+              </div>
+            </div>
+            <div class="kanban" id="kanbanBoard">
+              <div class="column" data-status="planned">
+                <h4>Planejado</h4>
+                <div class="dropzone">
+                  <div class="task" draggable="true" data-priority="important">
+                    Criar painel de SLAs internos
+                  </div>
+                  <div class="task" draggable="true" data-priority="urgent">
+                    Ajustar fluxo de aprovação atrasada
+                  </div>
+                </div>
+              </div>
+              <div class="column" data-status="progress">
+                <h4>Em andamento</h4>
+                <div class="dropzone">
+                  <div class="task" draggable="true" data-priority="important">
+                    Revisar processo de fechamento diário
+                  </div>
+                </div>
+              </div>
+              <div class="column" data-status="blocked">
+                <h4>Bloqueado</h4>
+                <div class="dropzone">
+                  <div class="task" draggable="true" data-priority="blocked">
+                    Definir responsável por documentação legado
+                  </div>
+                </div>
+              </div>
+              <div class="column" data-status="done">
+                <h4>Concluído</h4>
+                <div class="dropzone">
+                  <div class="task" draggable="true" data-priority="planned">
+                    Estruturar visão semanal da operação
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="split" id="rotina">
+          <article class="card">
+            <h3>Rotina Visual da Operação</h3>
+            <div class="timeline">
+              <div><span>08:30</span> Revisão de prioridades e SLAs críticos</div>
+              <div><span>10:00</span> Bloco de execução focada (90 min)</div>
+              <div><span>13:30</span> Atualização de status e desbloqueios</div>
+              <div><span>16:30</span> Registro de aprendizados e melhorias</div>
+              <div><span>17:30</span> Planejamento do próximo dia</div>
+            </div>
+          </article>
+
+          <article class="card" id="modelo">
+            <h3>Modelo Padronizado de Tarefa</h3>
+            <details open>
+              <summary>Padronizar fluxo de abertura de demanda</summary>
+              <div class="meta-grid">
+                <p><strong>Objetivo:</strong> reduzir retrabalho e tempo de resposta.</p>
+                <p><strong>Impacto:</strong> Alto</p>
+                <p><strong>Prioridade:</strong> Importante</p>
+                <p><strong>Status:</strong> Em andamento</p>
+                <p><strong>Setor:</strong> Administrativo + Operações</p>
+                <p><strong>Resultado esperado:</strong> SLA previsível e rastreável.</p>
+              </div>
+            </details>
+          </article>
+        </section>
+
+        <section class="card" id="ia">
+          <h3>Evolução com IA (Fases)</h3>
+          <div class="chips">
+            <button class="chip active" data-phase="1">Fase 1</button>
+            <button class="chip" data-phase="2">Fase 2</button>
+            <button class="chip" data-phase="3">Fase 3</button>
+            <button class="chip" data-phase="4">Fase 4</button>
+          </div>
+          <p id="phaseDescription">
+            Resumo automático do dia, sugestões de próximos passos e classificação
+            inicial de tarefas por contexto.
+          </p>
+        </section>
+
+        <section class="card" id="roadmap">
+          <h3>Roadmap de Implementação</h3>
+          <div class="roadmap">
+            <div><strong>MVP</strong><span>4–6 semanas</span><p>Tarefas, dashboard, prioridades e status.</p></div>
+            <div><strong>Operacional</strong><span>6–8 semanas</span><p>Processos, checklists, documentação e visão semanal.</p></div>
+            <div><strong>Otimizada</strong><span>6 semanas</span><p>Indicadores avançados, gargalos e automações simples.</p></div>
+            <div><strong>IA</strong><span>contínuo</span><p>Copiloto operacional e insights inteligentes.</p></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <template id="taskTemplate">
+      <div class="task" draggable="true" data-priority="planned">Nova atividade</div>
+    </template>
+
+    <script src="script.js"></script>
+  </body>
+</html>
