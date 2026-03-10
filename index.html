@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PRN PulseOps | Plataforma Operacional</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <canvas id="bgCanvas" aria-hidden="true"></canvas>
+
+    <div class="app-shell">
+      <aside class="sidebar reveal">
+        <h1>PRN PulseOps</h1>
+        <p>Central Operacional</p>
+        <nav>
+          <a href="#dashboard" class="active">Dashboard</a>
+          <a href="#modulos">Módulos</a>
+          <a href="#rotina">Rotina</a>
+          <a href="#modelo">Modelo de Tarefa</a>
+          <a href="#roadmap">Roadmap</a>
+          <a href="#ia">Evolução com IA</a>
+          <a href="#studio">Data Studio</a>
+        </nav>
+      </aside>
+
+      <main>
+        <header class="topbar reveal" id="dashboard">
+          <div>
+            <h2>Painel de Execução Diária</h2>
+            <p>Visão consolidada de prioridades, progresso e gargalos para execução com clareza.</p>
+          </div>
+          <div class="actions">
+            <button id="newTaskBtn">Nova Tarefa</button>
+            <button id="openStudioBtn" class="ghost">Editar Dados</button>
+            <button id="focusModeBtn" class="ghost">Modo Foco</button>
+          </div>
+        </header>
+
+        <section class="kpi-grid reveal">
+          <article class="kpi-card glow-hover">
+            <span>Tarefas do dia</span>
+            <strong id="kpiTasks">0</strong>
+          </article>
+          <article class="kpi-card glow-hover">
+            <span>Críticas</span>
+            <strong id="kpiCritical">0</strong>
+          </article>
+          <article class="kpi-card glow-hover">
+            <span>Concluídas na semana</span>
+            <strong id="kpiDone">0</strong>
+          </article>
+          <article class="kpi-card glow-hover">
+            <span>Bloqueios ativos</span>
+            <strong id="kpiBlocked">0</strong>
+          </article>
+        </section>
+
+        <section class="panel-grid" id="modulos">
+          <article class="card reveal glow-hover">
+            <div class="card-head">
+              <h3>Prioridades da Semana</h3>
+              <span class="tag important">Importante</span>
+            </div>
+            <ul id="weeklyPriorities"></ul>
+          </article>
+
+          <article class="card reveal glow-hover">
+            <div class="card-head">
+              <h3>Próximos Passos</h3>
+              <span class="tag planned">Planejado</span>
+            </div>
+            <ol id="nextSteps"></ol>
+          </article>
+
+          <article class="card full-width reveal glow-hover">
+            <div class="card-head">
+              <h3>Quadro Operacional por Status</h3>
+              <div class="filters">
+                <button class="pill active" data-filter="all">Todos</button>
+                <button class="pill" data-filter="urgent">Urgente</button>
+                <button class="pill" data-filter="important">Importante</button>
+                <button class="pill" data-filter="blocked">Bloqueado</button>
+              </div>
+            </div>
+            <div class="kanban" id="kanbanBoard">
+              <div class="column" data-status="planned">
+                <h4>Planejado</h4>
+                <div class="dropzone"></div>
+              </div>
+              <div class="column" data-status="progress">
+                <h4>Em andamento</h4>
+                <div class="dropzone"></div>
+              </div>
+              <div class="column" data-status="blocked">
+                <h4>Bloqueado</h4>
+                <div class="dropzone"></div>
+              </div>
+              <div class="column" data-status="done">
+                <h4>Concluído</h4>
+                <div class="dropzone"></div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="split" id="rotina">
+          <article class="card reveal glow-hover">
+            <h3>Rotina Visual da Operação</h3>
+            <div class="timeline" id="routineTimeline"></div>
+          </article>
+
+          <article class="card reveal glow-hover" id="modelo">
+            <h3>Modelo Padronizado de Tarefa</h3>
+            <details open>
+              <summary id="taskTemplateTitle"></summary>
+              <div class="meta-grid" id="taskTemplateMeta"></div>
+            </details>
+          </article>
+        </section>
+
+        <section class="card reveal glow-hover" id="ia">
+          <h3>Evolução com IA (Fases)</h3>
+          <div class="chips">
+            <button class="chip active" data-phase="1">Fase 1</button>
+            <button class="chip" data-phase="2">Fase 2</button>
+            <button class="chip" data-phase="3">Fase 3</button>
+            <button class="chip" data-phase="4">Fase 4</button>
+          </div>
+          <p id="phaseDescription"></p>
+        </section>
+
+        <section class="card reveal glow-hover" id="roadmap">
+          <h3>Roadmap de Implementação</h3>
+          <div class="roadmap" id="roadmapCards"></div>
+        </section>
+      </main>
+    </div>
+
+    <aside class="studio" id="studio">
+      <div class="studio-head">
+        <h3>Data Studio</h3>
+        <button id="closeStudioBtn" class="ghost">Fechar</button>
+      </div>
+
+      <p class="hint">Edite dados críticos e valide consistência antes de salvar.</p>
+      <label class="field">
+        Concluídas base da semana
+        <input id="weeklyBaseInput" type="number" min="0" />
+      </label>
+      <label class="field">
+        Prioridades da semana (1 por linha)
+        <textarea id="prioritiesInput" rows="4"></textarea>
+      </label>
+      <label class="field">
+        Próximos passos (1 por linha)
+        <textarea id="stepsInput" rows="4"></textarea>
+      </label>
+
+      <h4>Nova tarefa estruturada</h4>
+      <div class="two-cols">
+        <label class="field">Título <input id="newTaskTitle" type="text" /></label>
+        <label class="field"
+          >Prioridade
+          <select id="newTaskPriority">
+            <option value="planned">Planejado</option>
+            <option value="important">Importante</option>
+            <option value="urgent">Urgente</option>
+            <option value="blocked">Bloqueado</option>
+          </select>
+        </label>
+      </div>
+      <label class="field"
+        >Status
+        <select id="newTaskStatus">
+          <option value="planned">Planejado</option>
+          <option value="progress">Em andamento</option>
+          <option value="blocked">Bloqueado</option>
+          <option value="done">Concluído</option>
+        </select>
+      </label>
+
+      <div class="actions stack">
+        <button id="createStructuredTaskBtn">Adicionar tarefa</button>
+        <button id="validateDataBtn" class="ghost">Checar dados</button>
+        <button id="saveDataBtn">Salvar alterações</button>
+        <button id="resetDataBtn" class="ghost">Restaurar padrão</button>
+      </div>
+
+      <pre id="validationOutput" class="validation-box">Sem validações executadas.</pre>
+    </aside>
+
+    <script src="script.js"></script>
+  </body>
+</html>
