@@ -24,6 +24,7 @@
           <a href="#modelo">Modelo de Tarefa</a>
           <a href="#roadmap">Roadmap</a>
           <a href="#ia">Evolução com IA</a>
+          <a href="#studio">Data Studio</a>
         </nav>
       </aside>
 
@@ -38,6 +39,7 @@
           </div>
           <div class="actions">
             <button id="newTaskBtn">Nova Tarefa</button>
+            <button id="openStudioBtn" class="ghost">Editar Dados</button>
             <button id="focusModeBtn" class="ghost">Modo Foco</button>
           </div>
         </header>
@@ -45,19 +47,19 @@
         <section class="kpi-grid">
           <article class="kpi-card">
             <span>Tarefas do dia</span>
-            <strong id="kpiTasks">8</strong>
+            <strong id="kpiTasks">0</strong>
           </article>
           <article class="kpi-card">
             <span>Críticas</span>
-            <strong id="kpiCritical">2</strong>
+            <strong id="kpiCritical">0</strong>
           </article>
           <article class="kpi-card">
             <span>Concluídas na semana</span>
-            <strong id="kpiDone">24</strong>
+            <strong id="kpiDone">0</strong>
           </article>
           <article class="kpi-card">
             <span>Bloqueios ativos</span>
-            <strong id="kpiBlocked">3</strong>
+            <strong id="kpiBlocked">0</strong>
           </article>
         </section>
 
@@ -67,11 +69,7 @@
               <h3>Prioridades da Semana</h3>
               <span class="tag important">Importante</span>
             </div>
-            <ul>
-              <li>Padronizar fluxo de demandas internas</li>
-              <li>Fechar playbook de fechamento diário</li>
-              <li>Reduzir gargalos de aprovação em 30%</li>
-            </ul>
+            <ul id="weeklyPriorities"></ul>
           </article>
 
           <article class="card">
@@ -79,11 +77,7 @@
               <h3>Próximos Passos</h3>
               <span class="tag planned">Planejado</span>
             </div>
-            <ol>
-              <li>Revisar bloqueios com setor administrativo</li>
-              <li>Atualizar checklist de processo SOP-014</li>
-              <li>Registrar aprendizados no hub de documentação</li>
-            </ol>
+            <ol id="nextSteps"></ol>
           </article>
 
           <article class="card full-width">
@@ -99,38 +93,19 @@
             <div class="kanban" id="kanbanBoard">
               <div class="column" data-status="planned">
                 <h4>Planejado</h4>
-                <div class="dropzone">
-                  <div class="task" draggable="true" data-priority="important">
-                    Criar painel de SLAs internos
-                  </div>
-                  <div class="task" draggable="true" data-priority="urgent">
-                    Ajustar fluxo de aprovação atrasada
-                  </div>
-                </div>
+                <div class="dropzone"></div>
               </div>
               <div class="column" data-status="progress">
                 <h4>Em andamento</h4>
-                <div class="dropzone">
-                  <div class="task" draggable="true" data-priority="important">
-                    Revisar processo de fechamento diário
-                  </div>
-                </div>
+                <div class="dropzone"></div>
               </div>
               <div class="column" data-status="blocked">
                 <h4>Bloqueado</h4>
-                <div class="dropzone">
-                  <div class="task" draggable="true" data-priority="blocked">
-                    Definir responsável por documentação legado
-                  </div>
-                </div>
+                <div class="dropzone"></div>
               </div>
               <div class="column" data-status="done">
                 <h4>Concluído</h4>
-                <div class="dropzone">
-                  <div class="task" draggable="true" data-priority="planned">
-                    Estruturar visão semanal da operação
-                  </div>
-                </div>
+                <div class="dropzone"></div>
               </div>
             </div>
           </article>
@@ -139,27 +114,14 @@
         <section class="split" id="rotina">
           <article class="card">
             <h3>Rotina Visual da Operação</h3>
-            <div class="timeline">
-              <div><span>08:30</span> Revisão de prioridades e SLAs críticos</div>
-              <div><span>10:00</span> Bloco de execução focada (90 min)</div>
-              <div><span>13:30</span> Atualização de status e desbloqueios</div>
-              <div><span>16:30</span> Registro de aprendizados e melhorias</div>
-              <div><span>17:30</span> Planejamento do próximo dia</div>
-            </div>
+            <div class="timeline" id="routineTimeline"></div>
           </article>
 
           <article class="card" id="modelo">
             <h3>Modelo Padronizado de Tarefa</h3>
             <details open>
-              <summary>Padronizar fluxo de abertura de demanda</summary>
-              <div class="meta-grid">
-                <p><strong>Objetivo:</strong> reduzir retrabalho e tempo de resposta.</p>
-                <p><strong>Impacto:</strong> Alto</p>
-                <p><strong>Prioridade:</strong> Importante</p>
-                <p><strong>Status:</strong> Em andamento</p>
-                <p><strong>Setor:</strong> Administrativo + Operações</p>
-                <p><strong>Resultado esperado:</strong> SLA previsível e rastreável.</p>
-              </div>
+              <summary id="taskTemplateTitle"></summary>
+              <div class="meta-grid" id="taskTemplateMeta"></div>
             </details>
           </article>
         </section>
@@ -172,23 +134,68 @@
             <button class="chip" data-phase="3">Fase 3</button>
             <button class="chip" data-phase="4">Fase 4</button>
           </div>
-          <p id="phaseDescription">
-            Resumo automático do dia, sugestões de próximos passos e classificação
-            inicial de tarefas por contexto.
-          </p>
+          <p id="phaseDescription"></p>
         </section>
 
         <section class="card" id="roadmap">
           <h3>Roadmap de Implementação</h3>
-          <div class="roadmap">
-            <div><strong>MVP</strong><span>4–6 semanas</span><p>Tarefas, dashboard, prioridades e status.</p></div>
-            <div><strong>Operacional</strong><span>6–8 semanas</span><p>Processos, checklists, documentação e visão semanal.</p></div>
-            <div><strong>Otimizada</strong><span>6 semanas</span><p>Indicadores avançados, gargalos e automações simples.</p></div>
-            <div><strong>IA</strong><span>contínuo</span><p>Copiloto operacional e insights inteligentes.</p></div>
-          </div>
+          <div class="roadmap" id="roadmapCards"></div>
         </section>
       </main>
     </div>
+
+    <aside class="studio" id="studio">
+      <div class="studio-head" id="studio">
+        <h3>Data Studio</h3>
+        <button id="closeStudioBtn" class="ghost">Fechar</button>
+      </div>
+
+      <p class="hint">Edite dados críticos e valide consistência antes de salvar.</p>
+      <label class="field">
+        Concluídas base da semana
+        <input id="weeklyBaseInput" type="number" min="0" />
+      </label>
+      <label class="field">
+        Prioridades da semana (1 por linha)
+        <textarea id="prioritiesInput" rows="4"></textarea>
+      </label>
+      <label class="field">
+        Próximos passos (1 por linha)
+        <textarea id="stepsInput" rows="4"></textarea>
+      </label>
+
+      <h4>Nova tarefa estruturada</h4>
+      <div class="two-cols">
+        <label class="field">Título <input id="newTaskTitle" type="text" /></label>
+        <label class="field"
+          >Prioridade
+          <select id="newTaskPriority">
+            <option value="planned">Planejado</option>
+            <option value="important">Importante</option>
+            <option value="urgent">Urgente</option>
+            <option value="blocked">Bloqueado</option>
+          </select>
+        </label>
+      </div>
+      <label class="field"
+        >Status
+        <select id="newTaskStatus">
+          <option value="planned">Planejado</option>
+          <option value="progress">Em andamento</option>
+          <option value="blocked">Bloqueado</option>
+          <option value="done">Concluído</option>
+        </select>
+      </label>
+
+      <div class="actions stack">
+        <button id="createStructuredTaskBtn">Adicionar tarefa</button>
+        <button id="validateDataBtn" class="ghost">Checar dados</button>
+        <button id="saveDataBtn">Salvar alterações</button>
+        <button id="resetDataBtn" class="ghost">Restaurar padrão</button>
+      </div>
+
+      <pre id="validationOutput" class="validation-box">Sem validações executadas.</pre>
+    </aside>
 
     <template id="taskTemplate">
       <div class="task" draggable="true" data-priority="planned">Nova atividade</div>
