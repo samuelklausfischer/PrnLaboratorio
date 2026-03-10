@@ -13,8 +13,10 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <canvas id="bgCanvas" aria-hidden="true"></canvas>
+
     <div class="app-shell">
-      <aside class="sidebar">
+      <aside class="sidebar reveal">
         <h1>PRN PulseOps</h1>
         <p>Central Operacional</p>
         <nav>
@@ -29,13 +31,10 @@
       </aside>
 
       <main>
-        <header class="topbar" id="dashboard">
+        <header class="topbar reveal" id="dashboard">
           <div>
             <h2>Painel de Execução Diária</h2>
-            <p>
-              Visão consolidada de prioridades, progresso e gargalos para execução
-              com clareza.
-            </p>
+            <p>Visão consolidada de prioridades, progresso e gargalos para execução com clareza.</p>
           </div>
           <div class="actions">
             <button id="newTaskBtn">Nova Tarefa</button>
@@ -44,27 +43,27 @@
           </div>
         </header>
 
-        <section class="kpi-grid">
-          <article class="kpi-card">
+        <section class="kpi-grid reveal">
+          <article class="kpi-card glow-hover">
             <span>Tarefas do dia</span>
             <strong id="kpiTasks">0</strong>
           </article>
-          <article class="kpi-card">
+          <article class="kpi-card glow-hover">
             <span>Críticas</span>
             <strong id="kpiCritical">0</strong>
           </article>
-          <article class="kpi-card">
+          <article class="kpi-card glow-hover">
             <span>Concluídas na semana</span>
             <strong id="kpiDone">0</strong>
           </article>
-          <article class="kpi-card">
+          <article class="kpi-card glow-hover">
             <span>Bloqueios ativos</span>
             <strong id="kpiBlocked">0</strong>
           </article>
         </section>
 
         <section class="panel-grid" id="modulos">
-          <article class="card">
+          <article class="card reveal glow-hover">
             <div class="card-head">
               <h3>Prioridades da Semana</h3>
               <span class="tag important">Importante</span>
@@ -72,7 +71,7 @@
             <ul id="weeklyPriorities"></ul>
           </article>
 
-          <article class="card">
+          <article class="card reveal glow-hover">
             <div class="card-head">
               <h3>Próximos Passos</h3>
               <span class="tag planned">Planejado</span>
@@ -80,7 +79,7 @@
             <ol id="nextSteps"></ol>
           </article>
 
-          <article class="card full-width">
+          <article class="card full-width reveal glow-hover">
             <div class="card-head">
               <h3>Quadro Operacional por Status</h3>
               <div class="filters">
@@ -112,12 +111,12 @@
         </section>
 
         <section class="split" id="rotina">
-          <article class="card">
+          <article class="card reveal glow-hover">
             <h3>Rotina Visual da Operação</h3>
             <div class="timeline" id="routineTimeline"></div>
           </article>
 
-          <article class="card" id="modelo">
+          <article class="card reveal glow-hover" id="modelo">
             <h3>Modelo Padronizado de Tarefa</h3>
             <details open>
               <summary id="taskTemplateTitle"></summary>
@@ -126,7 +125,7 @@
           </article>
         </section>
 
-        <section class="card" id="ia">
+        <section class="card reveal glow-hover" id="ia">
           <h3>Evolução com IA (Fases)</h3>
           <div class="chips">
             <button class="chip active" data-phase="1">Fase 1</button>
@@ -137,7 +136,7 @@
           <p id="phaseDescription"></p>
         </section>
 
-        <section class="card" id="roadmap">
+        <section class="card reveal glow-hover" id="roadmap">
           <h3>Roadmap de Implementação</h3>
           <div class="roadmap" id="roadmapCards"></div>
         </section>
@@ -145,7 +144,7 @@
     </div>
 
     <aside class="studio" id="studio">
-      <div class="studio-head" id="studio">
+      <div class="studio-head">
         <h3>Data Studio</h3>
         <button id="closeStudioBtn" class="ghost">Fechar</button>
       </div>
@@ -196,10 +195,6 @@
 
       <pre id="validationOutput" class="validation-box">Sem validações executadas.</pre>
     </aside>
-
-    <template id="taskTemplate">
-      <div class="task" draggable="true" data-priority="planned">Nova atividade</div>
-    </template>
 
     <script src="script.js"></script>
   </body>

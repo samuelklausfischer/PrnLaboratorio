@@ -1,4 +1,4 @@
-const STORAGE_KEY = "prn-pulseops-data-v2";
+const STORAGE_KEY = "prn-pulseops-data-v3";
 
 const defaultData = {
   weeklyDoneBase: 20,
@@ -69,6 +69,20 @@ function saveData() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
+function animateNumber(element, target) {
+  const current = Number(element.textContent) || 0;
+  const start = performance.now();
+  const duration = 380;
+  const delta = target - current;
+
+  function frame(now) {
+    const progress = Math.min((now - start) / duration, 1);
+    element.textContent = String(Math.round(current + delta * progress));
+    if (progress < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
 function makeTaskNode(task) {
   const node = document.createElement("div");
   node.className = "task";
@@ -76,19 +90,23 @@ function makeTaskNode(task) {
   node.dataset.priority = task.priority;
   node.dataset.id = task.id;
   node.textContent = task.title;
+
   node.addEventListener("dragstart", () => {
     draggedTaskId = task.id;
     node.style.opacity = "0.45";
   });
+
   node.addEventListener("dragend", () => {
     node.style.opacity = "1";
   });
+
   return node;
 }
 
 function renderLists() {
   const prioritiesEl = document.getElementById("weeklyPriorities");
   const stepsEl = document.getElementById("nextSteps");
+
   prioritiesEl.innerHTML = data.priorities.map((item) => `<li>${item}</li>`).join("");
   stepsEl.innerHTML = data.nextSteps.map((item) => `<li>${item}</li>`).join("");
 
@@ -100,32 +118,30 @@ function renderLists() {
     })
     .join("");
 
-  const taskModel = data.taskModel;
-  document.getElementById("taskTemplateTitle").textContent = taskModel.title;
+  document.getElementById("taskTemplateTitle").textContent = data.taskModel.title;
   document.getElementById("taskTemplateMeta").innerHTML = `
-    <p><strong>Objetivo:</strong> ${taskModel.objective}</p>
-    <p><strong>Impacto:</strong> ${taskModel.impact}</p>
-    <p><strong>Prioridade:</strong> ${taskModel.priority}</p>
-    <p><strong>Status:</strong> ${taskModel.status}</p>
-    <p><strong>Setor:</strong> ${taskModel.sector}</p>
-    <p><strong>Resultado esperado:</strong> ${taskModel.result}</p>
+    <p><strong>Objetivo:</strong> ${data.taskModel.objective}</p>
+    <p><strong>Impacto:</strong> ${data.taskModel.impact}</p>
+    <p><strong>Prioridade:</strong> ${data.taskModel.priority}</p>
+    <p><strong>Status:</strong> ${data.taskModel.status}</p>
+    <p><strong>Setor:</strong> ${data.taskModel.sector}</p>
+    <p><strong>Resultado esperado:</strong> ${data.taskModel.result}</p>
   `;
 
   const roadmap = document.getElementById("roadmapCards");
   roadmap.innerHTML = data.roadmap
-    .map(
-      (card) =>
-        `<div><strong>${card.phase}</strong><span>${card.window}</span><p>${card.desc}</p></div>`,
-    )
+    .map((card) => `<div><strong>${card.phase}</strong><span>${card.window}</span><p>${card.desc}</p></div>`)
     .join("");
 }
 
 function renderTasks() {
   document.querySelectorAll(".dropzone").forEach((zone) => (zone.innerHTML = ""));
+
   data.tasks.forEach((task) => {
     const zone = document.querySelector(`[data-status="${task.status}"] .dropzone`);
     if (zone) zone.appendChild(makeTaskNode(task));
   });
+
   applyFilter(currentFilter);
 }
 
@@ -135,10 +151,10 @@ function recalculateKPIs() {
   const done = data.tasks.filter((task) => task.status === "done").length;
   const critical = data.tasks.filter((task) => task.priority === "urgent").length;
 
-  document.getElementById("kpiTasks").textContent = String(totalTasks);
-  document.getElementById("kpiBlocked").textContent = String(blocked);
-  document.getElementById("kpiDone").textContent = String(data.weeklyDoneBase + done);
-  document.getElementById("kpiCritical").textContent = String(critical);
+  animateNumber(document.getElementById("kpiTasks"), totalTasks);
+  animateNumber(document.getElementById("kpiBlocked"), blocked);
+  animateNumber(document.getElementById("kpiDone"), data.weeklyDoneBase + done);
+  animateNumber(document.getElementById("kpiCritical"), critical);
 }
 
 function validateDataSet(dataset) {
@@ -174,6 +190,89 @@ function applyFilter(filter) {
   });
 }
 
+function initRevealAnimation() {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add("in");
+      });
+    },
+    { threshold: 0.08 },
+  );
+
+  document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+}
+
+function initBackgroundCanvas() {
+  const canvas = document.getElementById("bgCanvas");
+  const ctx = canvas.getContext("2d");
+  const particles = [];
+  const maxParticles = window.innerWidth < 700 ? 25 : 45;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  function spawn() {
+    particles.length = 0;
+    for (let i = 0; i < maxParticles; i += 1) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: (Math.random() - 0.5) * 0.35,
+        r: Math.random() * 1.8 + 0.8,
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach((p) => {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+      ctx.beginPath();
+      ctx.fillStyle = "rgba(120, 169, 255, 0.55)";
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    for (let i = 0; i < particles.length; i += 1) {
+      for (let j = i + 1; j < particles.length; j += 1) {
+        const a = particles[i];
+        const b = particles[j];
+        const dx = a.x - b.x;
+        const dy = a.y - b.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < 120) {
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(87, 132, 230, ${0.22 - dist / 700})`;
+          ctx.lineWidth = 1;
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  resize();
+  spawn();
+  draw();
+
+  window.addEventListener("resize", () => {
+    resize();
+    spawn();
+  });
+}
+
 function wireEvents() {
   document.querySelectorAll(".chip").forEach((button) => {
     button.addEventListener("click", () => {
@@ -192,7 +291,7 @@ function wireEvents() {
   });
 
   document.querySelectorAll(".dropzone").forEach((zone) => {
-    zone.addEventListener("dragover", (e) => e.preventDefault());
+    zone.addEventListener("dragover", (event) => event.preventDefault());
     zone.addEventListener("drop", () => {
       if (!draggedTaskId) return;
       const targetStatus = zone.parentElement.dataset.status;
@@ -207,12 +306,14 @@ function wireEvents() {
   document.getElementById("newTaskBtn").addEventListener("click", () => {
     const name = prompt("Nome da nova tarefa:");
     if (!name) return;
+
     data.tasks.push({
       id: crypto.randomUUID(),
       title: name,
       priority: "planned",
       status: "planned",
     });
+
     saveData();
     renderTasks();
     recalculateKPIs();
@@ -226,6 +327,7 @@ function wireEvents() {
     document.getElementById("studio").classList.add("open");
     syncStudioInputs();
   });
+
   document.getElementById("closeStudioBtn").addEventListener("click", () => {
     document.getElementById("studio").classList.remove("open");
   });
@@ -234,10 +336,12 @@ function wireEvents() {
     const title = document.getElementById("newTaskTitle").value.trim();
     const priority = document.getElementById("newTaskPriority").value;
     const status = document.getElementById("newTaskStatus").value;
+
     if (!title) return;
 
     data.tasks.push({ id: crypto.randomUUID(), title, priority, status });
     document.getElementById("newTaskTitle").value = "";
+
     saveData();
     renderTasks();
     recalculateKPIs();
@@ -247,17 +351,10 @@ function wireEvents() {
     const draft = {
       ...data,
       weeklyDoneBase: Number(document.getElementById("weeklyBaseInput").value),
-      priorities: document
-        .getElementById("prioritiesInput")
-        .value.split("\n")
-        .map((item) => item.trim())
-        .filter(Boolean),
-      nextSteps: document
-        .getElementById("stepsInput")
-        .value.split("\n")
-        .map((item) => item.trim())
-        .filter(Boolean),
+      priorities: document.getElementById("prioritiesInput").value.split("\n").map((item) => item.trim()).filter(Boolean),
+      nextSteps: document.getElementById("stepsInput").value.split("\n").map((item) => item.trim()).filter(Boolean),
     };
+
     const issues = validateDataSet(draft);
     document.getElementById("validationOutput").textContent =
       issues.length === 0 ? "✅ Dados válidos para salvar." : `⚠️ Ajustes necessários:\n- ${issues.join("\n- ")}`;
@@ -267,16 +364,8 @@ function wireEvents() {
     const draft = {
       ...data,
       weeklyDoneBase: Number(document.getElementById("weeklyBaseInput").value),
-      priorities: document
-        .getElementById("prioritiesInput")
-        .value.split("\n")
-        .map((item) => item.trim())
-        .filter(Boolean),
-      nextSteps: document
-        .getElementById("stepsInput")
-        .value.split("\n")
-        .map((item) => item.trim())
-        .filter(Boolean),
+      priorities: document.getElementById("prioritiesInput").value.split("\n").map((item) => item.trim()).filter(Boolean),
+      nextSteps: document.getElementById("stepsInput").value.split("\n").map((item) => item.trim()).filter(Boolean),
     };
 
     const issues = validateDataSet(draft);
@@ -310,6 +399,8 @@ function init() {
   renderTasks();
   recalculateKPIs();
   wireEvents();
+  initRevealAnimation();
+  initBackgroundCanvas();
 }
 
 init();
